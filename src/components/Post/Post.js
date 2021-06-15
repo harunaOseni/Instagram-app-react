@@ -1,27 +1,24 @@
 import React from "react";
 import "./Post.css";
 import Avatar from "@material-ui/core/Avatar";
+import db from "../../firebase";
 
-function Post() {
+function Post({ username, caption, imageUrl }) {
   return (
     <div className="post">
       {/* header --> avatar + username */}
       <div className="post__top">
-        <Avatar className="post__avatar" src="https://pbs.twimg.com/profile_images/1401944008939745281/58R8IehR_400x400.jpg" />
-        <h4>Username</h4>
+        <Avatar className="post__avatar" />
+        <h4>{username}</h4>
       </div>
 
       {/* image */}
-      <img
-        src="https://i.insider.com/5e9dcd4215ea4b57a81e3704?width=1200&format=jpeg"
-        className="post__image"
-        alt=""
-      />
+      <img src={imageUrl} className="post__image" alt="" />
 
       {/* username + caption */}
       <h4 className="post__text">
-        <strong>they_call_me_seni </strong>
-        The Founders of instagram coding the amazing product!
+        <strong>{username} </strong>
+        {caption}
       </h4>
     </div>
   );
