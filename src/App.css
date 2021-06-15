@@ -16,6 +16,10 @@
 .app__signup {
     display: flex;
     flex-direction: column;
-    padding: 10px 10px;
+}
+
+.app__signup > img {
+    width: 100px;
+    margin: auto;
 }
 

@@ -1,7 +1,6 @@
 import React from "react";
 import "./Post.css";
 import Avatar from "@material-ui/core/Avatar";
-import db from "../../firebase";
 
 function Post({ username, caption, imageUrl }) {
   return (

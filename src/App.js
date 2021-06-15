@@ -7,10 +7,6 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Button } from "@material-ui/core";
 import { Input } from "@material-ui/core";
 
-function rand() {
-  return Math.round(Math.random() * 20) - 10;
-}
-
 function getModalStyle() {
   const top = 50;
   const left = 50;
@@ -42,23 +38,26 @@ function App() {
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
   const [authenticatedUser, setAuthenticatedUser] = useState(null);
+  const [openSignIn, setOpenSignIn] = useState(false);
 
   useEffect(() => {
     auth.onAuthStateChanged((authUser) => {
       //detects any changes made in authentication by user
       if (authUser) {
         //user has logged in...
+        //Set authenticated users info to app state ==> "authenticated user"
         setAuthenticatedUser(authUser);
-
-        
+        console.log(authUser);
       } else {
         //user has logged out...
+        //Set app state ==> "authenticated user" to "null"
         setAuthenticatedUser(null);
       }
     });
-  }, []);
+  }, [authenticatedUser, username]);
 
   useEffect(() => {
+    //Getting the snapshot of each post and updating our application posts state
     db.collection("posts").onSnapshot((snapshot) => {
       setPost(
         snapshot.docs.map((doc) => ({
@@ -89,12 +88,31 @@ function App() {
     setUsername(event.target.value);
   }
 
-  function signUp(event) {
-    event.preventDefault();
+  function userSignOut() {
+    auth.signOut();
+  }
 
+  function open__signIn() {
+    setOpenSignIn(true);
+  }
+
+  function close__signIn() {
+    setOpenSignIn(false);
+  }
+
+  function signUp(event) {
+    event.preventDefault(); //Prevent refresh on submit action
+    //Using firebase authentication to sign up user with email and password
     auth
       .createUserWithEmailAndPassword(email, password)
-      .catch((error) => alert(error.message));
+      .then((authUser) => {
+        //Getting access to the authenticated users information
+        //and updating the users generated profile name in app.
+        return authUser.user.updateProfile({
+          displayName: username,
+        });
+      })
+      .catch((error) => alert(error.message)); //Alert if any error was found with information on the error.
   }
 
   return (
@@ -138,7 +156,12 @@ function App() {
           alt="The Instagram Logo"
         />
       </div>
-      <Button onClick={handleOpen}>Sign Up</Button>
+
+      {authenticatedUser ? (
+        <Button onClick={userSignOut}>Sign Out</Button>
+      ) : (
+        <Button onClick={handleOpen}>Sign Up</Button>
+      )}
       {posts.map((post) => (
         <Post
           key={post.id}
