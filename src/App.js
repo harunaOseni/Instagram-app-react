@@ -168,7 +168,6 @@ function App() {
           </form>
         </div>
       </Modal>
-
       <Modal open={openSignIn} onClose={close__signIn}>
         <div style={modalStyle} className={classes.paper}>
           <form>
@@ -194,7 +193,6 @@ function App() {
           </form>
         </div>
       </Modal>
-
       <div className="app__header">
         <img
           src="https:///www.instagram.com/static/images/web/mobile_nav_type_logo.png/735145cfe0a4.png"
@@ -210,16 +208,33 @@ function App() {
           </div>
         )}
       </div>
-      {posts.map((post) => (
+      <div className="app__feed">
         <div className="app__posts">
-          <Post
-            key={post.id}
-            username={post.data.username}
-            caption={post.data.caption}
-            imageUrl={post.data.imageUrl}
-          />
+          {posts.map((post) => (
+            <Post
+              key={post.id}
+              username={post.data.username}
+              caption={post.data.caption}
+              imageUrl={post.data.imageUrl}
+            />
+          ))}
         </div>
-      ))}
+        <div className="app__widget">
+          <div className="widget">
+            <iframe
+              src="https://www.facebook.com/plugins/page.php?href=https%3A%2F%2Fwww.facebook.com%2Finstagram&tabs=timeline&width=340&height=1500&small_header=false&adapt_container_width=true&hide_cover=false&show_facepile=true&appId"
+              title="Facebook Page"
+              width="340"
+              height="1500"
+              style={{ border: "none", overflow: "hidden" }}
+              scrolling="no"
+              frameborder="0"
+              allowTransparency="true"
+              allow="encrypted-media"
+            ></iframe>
+          </div>
+        </div>
+      </div>
       {authenticatedUser?.displayName ? (
         <ImageUploader username={authenticatedUser.displayName} />
       ) : (

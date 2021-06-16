@@ -29,6 +29,13 @@
   margin: auto;
 }
 
+.app__feed {
+    display: flex;
+    justify-content: center;
+}
+
 .app__posts {
     padding: 15px 15px;
 }
+
+
