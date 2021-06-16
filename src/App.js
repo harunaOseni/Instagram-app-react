@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
-import { Post } from "./components";
+import { Post, ImageUploader } from "./components";
 import { db, auth } from "./firebase";
 import Modal from "@material-ui/core/Modal";
 import { makeStyles } from "@material-ui/core/styles";
@@ -113,10 +113,31 @@ function App() {
         });
       })
       .catch((error) => alert(error.message)); //Alert if any error was found with information on the error.
+
+    //close sign up modal
+    handleClose();
+    setEmail("");
+    setPassword("");
+    setUsername("");
+  }
+
+  function signIn(event) {
+    event.preventDefault();
+
+    auth
+      .signInWithEmailAndPassword(email, password)
+      .catch((error) => alert(`We have an error, ${error}`));
+
+    close__signIn();
   }
 
   return (
     <div className="app">
+      {authenticatedUser?.displayName ? (
+        <ImageUploader username={authenticatedUser.displayName} />
+      ) : (
+        <h1>LOG IN TO UPLOAD POST</h1>
+      )}
       <Modal open={open} onClose={handleClose}>
         <div style={modalStyle} className={classes.paper}>
           <form>
@@ -150,6 +171,33 @@ function App() {
           </form>
         </div>
       </Modal>
+
+      <Modal open={openSignIn} onClose={close__signIn}>
+        <div style={modalStyle} className={classes.paper}>
+          <form>
+            <center className="app__signup">
+              <img
+                src="https:///www.instagram.com/static/images/web/mobile_nav_type_logo.png/735145cfe0a4.png"
+                alt="The Instagram logo"
+              />
+              <Input
+                placeholder="email"
+                type="text"
+                value={email}
+                onChange={updateEmail}
+              />
+              <Input
+                type="text"
+                value={password}
+                onChange={updatePassword}
+                placeholder="password"
+              />
+              <Button onClick={signIn}>Login</Button>
+            </center>
+          </form>
+        </div>
+      </Modal>
+
       <div className="app__header">
         <img
           src="https:///www.instagram.com/static/images/web/mobile_nav_type_logo.png/735145cfe0a4.png"
@@ -158,9 +206,12 @@ function App() {
       </div>
 
       {authenticatedUser ? (
-        <Button onClick={userSignOut}>Sign Out</Button>
+        <Button onClick={userSignOut}>Log Out</Button>
       ) : (
-        <Button onClick={handleOpen}>Sign Up</Button>
+        <div className="app__loginContainer">
+          <Button onClick={open__signIn}>Sign In</Button>
+          <Button onClick={handleOpen}>Sign Up</Button>
+        </div>
       )}
       {posts.map((post) => (
         <Post
