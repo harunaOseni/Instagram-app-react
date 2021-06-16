@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Button } from "@material-ui/core";
 import { storage, db } from "../../firebase";
 import firebase from "firebase";
+import "./ImageUpload.css";
 
 function ImageUploader({ username }) {
   const [image, setImage] = useState(null);
@@ -50,30 +51,25 @@ function ImageUploader({ username }) {
               username: username,
               imageUrl: url,
             });
+
+            setProgress(0);
+            setCaption("");
+            setImage(null);
           });
       }
     );
-
-    setProgress(0);
-    setCaption("");
-    setImage(null);
   }
   return (
     <div className="image__uploadContainer">
-      {/* I want to have .... */}
-      {/* Caption input */}
-      {/* File picker */}
-      {/* Post button */}
-      <form>
-        <input
-          type="text"
-          placeholder="Enter a caption..."
-          onChange={handleCaption}
-          value={caption}
-        />
-        <input type="file" onChange={handleImageFile} />
-        <Button onClick={handleUpload}>Upload</Button>
-      </form>
+      <progress value={progress} max="100" className="imageUpload__progress" />
+      <input
+        type="text"
+        placeholder="Enter a caption..."
+        onChange={handleCaption}
+        value={caption}
+      />
+      <input type="file" onChange={handleImageFile} />
+      <Button onClick={handleUpload}>Upload</Button>
     </div>
   );
 }

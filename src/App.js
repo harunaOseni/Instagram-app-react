@@ -58,14 +58,16 @@ function App() {
 
   useEffect(() => {
     //Getting the snapshot of each post and updating our application posts state
-    db.collection("posts").onSnapshot((snapshot) => {
-      setPost(
-        snapshot.docs.map((doc) => ({
-          id: doc.id,
-          data: doc.data(),
-        }))
-      );
-    });
+    db.collection("posts")
+      .orderBy("timestamp", "desc")
+      .onSnapshot((snapshot) => {
+        setPost(
+          snapshot.docs.map((doc) => ({
+            id: doc.id,
+            data: doc.data(),
+          }))
+        );
+      });
   }, []);
 
   function handleClose() {
@@ -133,11 +135,6 @@ function App() {
 
   return (
     <div className="app">
-      {authenticatedUser?.displayName ? (
-        <ImageUploader username={authenticatedUser.displayName} />
-      ) : (
-        <h1>LOG IN TO UPLOAD POST</h1>
-      )}
       <Modal open={open} onClose={handleClose}>
         <div style={modalStyle} className={classes.paper}>
           <form>
@@ -202,25 +199,32 @@ function App() {
         <img
           src="https:///www.instagram.com/static/images/web/mobile_nav_type_logo.png/735145cfe0a4.png"
           alt="The Instagram Logo"
+          className="appLogo__header"
         />
+        {authenticatedUser ? (
+          <Button onClick={userSignOut}>Log Out</Button>
+        ) : (
+          <div className="app__loginContainer">
+            <Button onClick={open__signIn}>Sign In</Button>
+            <Button onClick={handleOpen}>Sign Up</Button>
+          </div>
+        )}
       </div>
-
-      {authenticatedUser ? (
-        <Button onClick={userSignOut}>Log Out</Button>
-      ) : (
-        <div className="app__loginContainer">
-          <Button onClick={open__signIn}>Sign In</Button>
-          <Button onClick={handleOpen}>Sign Up</Button>
-        </div>
-      )}
       {posts.map((post) => (
-        <Post
-          key={post.id}
-          username={post.data.username}
-          caption={post.data.caption}
-          imageUrl={post.data.imageUrl}
-        />
+        <div className="app__posts">
+          <Post
+            key={post.id}
+            username={post.data.username}
+            caption={post.data.caption}
+            imageUrl={post.data.imageUrl}
+          />
+        </div>
       ))}
+      {authenticatedUser?.displayName ? (
+        <ImageUploader username={authenticatedUser.displayName} />
+      ) : (
+        <h1>LOG IN TO UPLOAD POST</h1>
+      )}
     </div>
   );
 }

@@ -10,16 +10,25 @@
   object-fit: contain; /* Keep aspect ratio irrespective of change in size of parent container*/
   background-color: white;
   padding: 20px;
+  display: flex;
   border-bottom: 1px solid lightgray;
+  justify-content: space-between;
+}
+
+.appLogo__header {
+  object-fit: contain; /* Image should look the same irrespective of any changes parent container */
 }
 
 .app__signup {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .app__signup > img {
-    width: 100px;
-    margin: auto;
+  width: 100px;
+  margin: auto;
 }
 
+.app__posts {
+    padding: 15px 15px;
+}
