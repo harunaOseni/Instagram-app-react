@@ -2,8 +2,9 @@ import React, { useState, useEffect } from "react";
 import "./Post.css";
 import Avatar from "@material-ui/core/Avatar";
 import { db } from "../../firebase";
+import firebase from "firebase";
 
-function Post({ username, caption, imageUrl, postId }) {
+function Post({ username, caption, imageUrl, postId, users }) {
   //Where our comments for each posts will be stored
   const [comments, setComments] = useState([]);
   const [comment, setComment] = useState("");
@@ -16,6 +17,7 @@ function Post({ username, caption, imageUrl, postId }) {
         .collection("posts")
         .doc(postId)
         .collection("comments")
+        .orderBy("timestamp", "desc")
         .onSnapshot((snapshot) => {
           setComments(snapshot.docs.map((doc) => doc.data()));
         });
@@ -30,6 +32,18 @@ function Post({ username, caption, imageUrl, postId }) {
 
   function handleComment(event) {
     setComment(event.target.value);
+  }
+
+  function handlePostComment(event) {
+    event.preventDefault();
+
+    db.collection("posts").doc(postId).collection("comments").add({
+      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+      text: comment,
+      username: users.displayName,
+    });
+
+    setComment("");
   }
 
   return (
@@ -49,14 +63,31 @@ function Post({ username, caption, imageUrl, postId }) {
         {caption}
       </h4>
 
-      <form>
+      <div className="post__comments">
+        {comments.map((comment) => (
+          <p>
+            <strong>{comment.username}</strong> {comment.text}
+          </p>
+        ))}
+      </div>
+
+      <form className="post__commentBox">
         <input
           type="text"
           className="comment__input"
           placeholder="Add a comment..."
+          disabled={!users}
           value={comment}
           onChange={handleComment}
         />
+        <button
+          className="comment__button"
+          disabled={!comment}
+          type="submit"
+          onClick={handlePostComment}
+        >
+          Post
+        </button>
       </form>
     </div>
   );

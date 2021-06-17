@@ -7,6 +7,9 @@
 }
 
 .app__header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
   object-fit: contain; /* Keep aspect ratio irrespective of change in size of parent container*/
   background-color: white;
   padding: 20px;
@@ -30,12 +33,10 @@
 }
 
 .app__feed {
-    display: flex;
-    justify-content: center;
+  display: flex;
+  justify-content: center;
 }
 
 .app__posts {
-    padding: 15px 15px;
+  padding: 15px 15px;
 }
-
-

@@ -217,6 +217,7 @@ function App() {
               username={post.data.username}
               caption={post.data.caption}
               imageUrl={post.data.imageUrl}
+              users={authenticatedUser}
             />
           ))}
         </div>
